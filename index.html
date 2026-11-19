@@ -28,6 +28,12 @@ body{margin:0;min-height:100%;background:var(--bg);color:var(--fg);font-family:v
 .intro.out .sh{opacity:0;transition:opacity .45s .12s ease-out}
 .intro .c{position:absolute;inset:0;transition:opacity .3s}.intro.out .c{opacity:0}
 .intro.out .ph{animation:zoomthru .55s linear forwards}
+/* landing: the intro crest flies to the exact place of the page crest (--lx/--ly/--ls are measured in finish()) */
+.intro.out.land .ph{animation:landing 1s cubic-bezier(.65,0,.25,1) forwards}
+.intro.out.land .sh{transition:opacity .7s .05s ease-out}
+html.land .crest{animation:landin 1s both,drift 30s ease-in-out infinite alternate}
+@keyframes landing{from{opacity:1;translate:-50% -50%;scale:1}to{opacity:1;translate:calc(-50% + var(--lx,0px)) calc(-50% + var(--ly,0px));scale:var(--ls,1)}}
+@keyframes landin{0%,92%{opacity:0}100%{opacity:1}}
 .intro.out.quick .ph{animation:none}.intro.out.quick .sh{transition-delay:0s;transition-duration:.45s}
 .intro.out .skip{opacity:0;pointer-events:none;transition:opacity .25s}
 @keyframes zoomthru{0%{scale:1;opacity:1}25%{scale:2.2}50%{scale:5.5;opacity:1}75%{scale:12;opacity:.4}100%{scale:26;opacity:0}}
@@ -312,7 +318,10 @@ document.addEventListener("visibilitychange",function(){if(!ctx)return;if(docume
 function finish(){if(done)return;done=true;introLive=false;try{sessionStorage.setItem("utfc-seen","1")}catch(e){}
 R.classList.add("go");page.inert=false;
 if(musicOn){if(performance.now()-playT0<8500)playFrom(LS,BG,.8);else fadeTo(BG,1.2)}
-if(it){if(performance.now()-playT0<4700)it.classList.add("quick");it.classList.add("out");setTimeout(function(){if(L0)L0.stop();it.remove()},1500)}
+if(it){var qk=performance.now()-playT0<4700;if(qk)it.classList.add("quick");
+else{try{var ph=it.querySelector(".ph"),tg=document.querySelector(".cimg");scrollTo(0,0);var a=ph.getBoundingClientRect(),b=tg.getBoundingClientRect();
+if(a.height>20&&b.height>20){it.style.setProperty("--lx",(b.left+b.width/2-a.left-a.width/2).toFixed(1)+"px");it.style.setProperty("--ly",(b.top+b.height/2-a.top-a.height/2).toFixed(1)+"px");it.style.setProperty("--ls",(b.height/a.height).toFixed(4));it.classList.add("land");R.classList.add("land")}}catch(e){}}
+it.classList.add("out");setTimeout(function(){if(L0)L0.stop();it.remove()},1500)}
 setTimeout(function(){R.classList.add("ready")},2000)}
 function go(){playT0=performance.now();introLive=true;R.classList.add("play");L0.begin();setTimeout(finish,9100)}
 function begin(withSound){gate.classList.add("hide");setTimeout(function(){gate.remove()},600);

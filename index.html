@@ -129,6 +129,7 @@ header{animation:appear .9s .2s both}
 .brand:hover .mark{transform:rotate(-6deg) scale(1.12);filter:drop-shadow(0 0 8px rgba(255,190,110,.6))}
 .status{font:italic 600 15px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px}
 .status::before{content:"";width:7px;height:7px;border-radius:50%;background:#e0284f;animation:pulse 2.2s ease-out infinite}
+.status.sm{display:none}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(224,40,79,.6)}100%{box-shadow:0 0 0 12px rgba(224,40,79,0)}}
 main{align-self:center;padding:2vh clamp(20px,5vw,72px)}
 .kick{font:italic 700 clamp(17px,1.6vw,22px)/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;margin:0 0 22px;color:var(--sand)}
@@ -162,6 +163,7 @@ footer a:hover{background-size:100% 1px;color:var(--amber)}
 .page{grid-template-rows:auto auto 1fr auto}
 .crest{position:relative;right:auto;top:auto;bottom:auto;margin:6px auto 0;justify-self:center;height:min(44svh,calc(88vw/.784))}
 header{position:relative;padding:18px 20px}.status{display:none}
+.status.sm{display:inline-flex;margin:0 0 16px;padding:9px 14px;border:1px solid var(--line);font-size:14px;letter-spacing:.18em;color:var(--sand)}
 main{align-self:end;padding:8px 20px}
 h1{font-size:clamp(52px,16.5vw,96px);max-width:none}
 .cta{width:100%;justify-content:center;min-height:56px}
@@ -197,6 +199,7 @@ footer{padding:22px 20px 26px;flex-direction:column;align-items:flex-start;gap:1
 <button class="hs" type="button" data-k="kolam" aria-label="The Sikku Kolam" style="--x:50.2;--y:88.5;--w:17.9;--h:11.2;--z:3"><i class="pin"></i></button>
 </div>
 <main id="top">
+<p class="status sm fade">Official website coming soon</p>
 <p class="kick fade">Believe. Belong. Conquer.</p>
 <h1 aria-label="A new era begins."><span><b>A new</b></span><span><b>era</b></span><span><b>begins.</b></span></h1>
 <div class="rule"></div>

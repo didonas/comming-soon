@@ -24,8 +24,13 @@ body{margin:0;min-height:100%;background:var(--bg);color:var(--fg);font-family:v
 .intro{position:fixed;inset:0;z-index:100;overflow:hidden;color:var(--sand)}
 .sh{position:absolute;left:0;right:0;height:50.3%;transition:transform 1.2s cubic-bezier(.76,0,.24,1)}
 .sh.t{top:0;background:linear-gradient(#0b0405,#1c090b)}.sh.b{bottom:0;background:linear-gradient(#1c090b,#0b0405)}
-.intro.out .sh.t{transform:translateY(-101%)}.intro.out .sh.b{transform:translateY(101%)}
-.intro .c{position:absolute;inset:0;transition:opacity .7s}.intro.out .c{opacity:0}
+/* ending: the crest zooms through the camera while the dark intro dissolves (replaces the sliding shutters) */
+.intro.out .sh{opacity:0;transition:opacity .45s .12s ease-out}
+.intro .c{position:absolute;inset:0;transition:opacity .3s}.intro.out .c{opacity:0}
+.intro.out .ph{animation:zoomthru .55s linear forwards}
+.intro.out.quick .ph{animation:none}.intro.out.quick .sh{transition-delay:0s;transition-duration:.45s}
+.intro.out .skip{opacity:0;pointer-events:none;transition:opacity .25s}
+@keyframes zoomthru{0%{scale:1;opacity:1}25%{scale:2.2}50%{scale:5.5;opacity:1}75%{scale:12;opacity:.4}100%{scale:26;opacity:0}}
 .core{position:absolute;inset:0;background:radial-gradient(ellipse 62% 56% at 50% 45%,rgba(127,1,31,.8),transparent 72%);opacity:0;animation:appear 2.2s 2.6s forwards}
 #lat0,#lat{position:absolute;inset:0;width:100%;height:100%}
 .lights{position:absolute;inset:0;mix-blend-mode:screen}
@@ -175,8 +180,8 @@ footer{padding:22px 20px 26px;flex-direction:column;align-items:flex-start;gap:1
 <div class="c"><div class="core"></div><canvas id="lat0" aria-hidden="true"></canvas><div class="lights"><i></i><i></i></div>
 <svg class="thread" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="tg"><stop offset="0" stop-color="#7F011F"/><stop offset=".5" stop-color="#ffd69a"/><stop offset="1" stop-color="#F5EBD0"/></linearGradient></defs>
 <path pathLength="1" d="M-20 520C180 250 330 760 520 500S860 250 1020 480"/><path pathLength="1" d="M-20 480C190 740 340 250 520 500S870 760 1020 520"/></svg>
-<div class="ph" role="img" aria-label="United Thamizhagam FC crest"></div>
 <div class="words"><span>Believe.</span><span>Belong.</span><span>Conquer.</span></div></div>
+<div class="ph" role="img" aria-label="United Thamizhagam FC crest"></div>
 <button class="skip" id="skip" hidden>Skip intro</button>
 </div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><g id="gpl"><rect x="40" y="40" width="920" height="620"/><path d="M500 40V660"/><rect x="40" y="174" width="144" height="352"/><rect x="816" y="174" width="144" height="352"/><rect x="40" y="270" width="48" height="160"/><rect x="912" y="270" width="48" height="160"/><path d="M184 286A80 80 0 0 1 184 414M816 286A80 80 0 0 0 816 414"/><rect x="26" y="318" width="14" height="64"/><rect x="960" y="318" width="14" height="64"/><circle cx="136" cy="350" r="3" style="fill:var(--sand)"/><circle cx="864" cy="350" r="3" style="fill:var(--sand)"/></g></defs></svg>
@@ -287,7 +292,7 @@ crest.addEventListener("focusin",function(e){var h=e.target.closest("[data-k]");
 crest.addEventListener("focusout",function(e){if(!crest.contains(e.relatedTarget))hide()});
 document.addEventListener("pointerdown",function(e){if(!crest.contains(e.target)){P.over=false;hide()}});
 document.addEventListener("keydown",function(e){if(e.key==="Escape")hide()});
-/* intro film: 9.1s, cut to the track's drum hits (hits at 0.2s, 3.0s, 6.15s, 9.1s), then shutters open */
+/* intro film: 9.1s, cut to the track's drum hits (hits at 0.2s, 3.0s, 6.15s, 9.1s), then the crest zooms through to the page */
 var AC=window.AudioContext||window.webkitAudioContext,ctx,gain,an,buf,src,dec,musicOn=false,introLive=false,tk=false,playT0=0,BG=.38,LS=11.4,LE=40.7,fd=new Uint8Array(32),prev=0,lastB=0,
 snd=document.getElementById("snd"),gate=document.getElementById("gate");
 function ui(){snd.setAttribute("aria-pressed",musicOn?"true":"false");snd.querySelector(".sl").textContent=musicOn?"Sound on":"Sound off"}
@@ -307,7 +312,7 @@ document.addEventListener("visibilitychange",function(){if(!ctx)return;if(docume
 function finish(){if(done)return;done=true;introLive=false;try{sessionStorage.setItem("utfc-seen","1")}catch(e){}
 R.classList.add("go");page.inert=false;
 if(musicOn){if(performance.now()-playT0<8500)playFrom(LS,BG,.8);else fadeTo(BG,1.2)}
-if(it){it.classList.add("out");setTimeout(function(){if(L0)L0.stop();it.remove()},1500)}
+if(it){if(performance.now()-playT0<4700)it.classList.add("quick");it.classList.add("out");setTimeout(function(){if(L0)L0.stop();it.remove()},1500)}
 setTimeout(function(){R.classList.add("ready")},2000)}
 function go(){playT0=performance.now();introLive=true;R.classList.add("play");L0.begin();setTimeout(finish,9100)}
 function begin(withSound){gate.classList.add("hide");setTimeout(function(){gate.remove()},600);
